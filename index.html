@@ -1,0 +1,2050 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#C2185B">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>🍓 Песенный Вечер</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<style>
+  @import url('https://cdn.jsdelivr.net/npm/fontsource-inter@5.0.0/index.css');
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  :root {
+    --raspberry: #C2185B;
+    --raspberry-dark: #880E4F;
+    --raspberry-light: #F8BBD0;
+    --raspberry-bg: #FCE4EC;
+    --cream: #FFF8E7;
+    --butter: #FFD54F;
+    --text: #2D1422;
+    --text-light: #7A3E66;
+    --white: #FFFFFF;
+    --shadow: rgba(136, 14, 79, 0.12);
+    --lyrics-font-size: 16px;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--raspberry-bg);
+    color: var(--text);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    touch-action: manipulation;
+  }
+
+  /* Decorative soft background */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: 
+      radial-gradient(circle at 10% 20%, rgba(194, 24, 91, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 90% 80%, rgba(194, 24, 91, 0.06) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(248, 187, 208, 0.1) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 12px calc(48px + env(safe-area-inset-bottom));
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Compact Header optimized for mobile screens */
+  .header {
+    text-align: center;
+    padding: calc(14px + env(safe-area-inset-top)) 10px 8px;
+    position: relative;
+  }
+
+  .logo-container {
+    width: 135px;
+    max-width: 60%;
+    margin: 0 auto 8px;
+    position: relative;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+
+  .logo-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 8px 18px rgba(194, 24, 91, 0.22));
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+
+  .header h1 {
+    font-size: 25px;
+    font-weight: 800;
+    color: var(--raspberry-dark);
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+  }
+
+  /* Sticky Top Bar: Search & Controls */
+  .sticky-top-bar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(252, 228, 236, 0.94);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 8px 0 10px;
+    margin-bottom: 14px;
+    border-bottom: 1px solid rgba(194, 24, 91, 0.08);
+  }
+
+  .search-container {
+    position: relative;
+    margin-bottom: 8px;
+  }
+
+  .search-input {
+    width: 100%;
+    height: 46px;
+    padding: 0 42px 0 42px;
+    border: 2px solid var(--raspberry-light);
+    border-radius: 14px;
+    font-size: 15px;
+    font-family: inherit;
+    background: var(--white);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .search-input:focus {
+    border-color: var(--raspberry);
+    box-shadow: 0 0 0 3px rgba(194, 24, 91, 0.15);
+  }
+
+  .search-input::placeholder {
+    color: #B08A9E;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    fill: var(--raspberry);
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  .search-clear {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 34px;
+    height: 34px;
+    border: none;
+    background: transparent;
+    color: #B08A9E;
+    font-size: 18px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 50%;
+  }
+
+  .search-clear:active {
+    background: var(--raspberry-bg);
+    color: var(--raspberry);
+  }
+
+  .search-clear.visible {
+    display: flex;
+  }
+
+  .search-status {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--raspberry);
+    text-align: center;
+    margin-top: 4px;
+    display: none;
+  }
+
+  .search-status.visible {
+    display: block;
+  }
+
+  /* Quick Actions Bar */
+  .quick-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 6px;
+    flex: 1;
+  }
+
+  .btn {
+    height: 38px;
+    padding: 0 10px;
+    border: none;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    user-select: none;
+    white-space: nowrap;
+  }
+
+  .btn:active {
+    transform: scale(0.96);
+  }
+
+  .btn-expand {
+    flex: 1;
+    background: var(--white);
+    color: var(--raspberry);
+    border: 1.5px solid var(--raspberry-light);
+  }
+
+  .btn-expand:active {
+    background: var(--raspberry-bg);
+  }
+
+  .btn-collapse {
+    flex: 1;
+    background: linear-gradient(135deg, var(--raspberry) 0%, var(--raspberry-dark) 100%);
+    color: var(--white);
+  }
+
+  /* Font size controls */
+  .font-controls {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    background: var(--white);
+    border: 1.5px solid var(--raspberry-light);
+    border-radius: 10px;
+    padding: 2px;
+  }
+
+  .btn-font {
+    height: 32px;
+    min-width: 32px;
+    padding: 0 5px;
+    background: transparent;
+    border: none;
+    color: var(--raspberry-dark);
+    font-weight: 700;
+    font-size: 12px;
+    border-radius: 7px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-font:active {
+    background: var(--raspberry-bg);
+  }
+
+  .font-size-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-light);
+    min-width: 20px;
+    text-align: center;
+  }
+
+  /* Wake Lock toggle button */
+  .btn-wakelock {
+    height: 38px;
+    padding: 0 9px;
+    background: var(--white);
+    border: 1.5px solid var(--raspberry-light);
+    border-radius: 10px;
+    color: var(--text-light);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+  }
+
+  .btn-wakelock.active {
+    background: #FFF8E1;
+    border-color: #FFA000;
+    color: #E65100;
+    box-shadow: 0 2px 8px rgba(255, 160, 0, 0.25);
+  }
+
+  /* Sections */
+  .section {
+    margin-bottom: 22px;
+  }
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--white);
+    background: linear-gradient(135deg, var(--raspberry) 0%, var(--raspberry-dark) 100%);
+    padding: 11px 16px;
+    border-radius: 14px;
+    margin-bottom: 10px;
+    box-shadow: 0 3px 12px var(--shadow);
+  }
+
+  .section-title .icon {
+    font-size: 20px;
+  }
+
+  /* Song Cards */
+  .song-card {
+    background: var(--white);
+    border-radius: 14px;
+    margin-bottom: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px var(--shadow);
+    border: 1px solid rgba(194, 24, 91, 0.08);
+    transition: transform 0.15s ease, box-shadow 0.2s ease;
+  }
+
+  .song-card.hidden {
+    display: none;
+  }
+
+  .song-header {
+    display: flex;
+    align-items: center;
+    padding: 13px 14px;
+    min-height: 56px;
+    cursor: pointer;
+    user-select: none;
+    gap: 12px;
+    transition: background 0.15s ease;
+  }
+
+  .song-header:active {
+    background: rgba(248, 187, 208, 0.35);
+  }
+
+  .song-number {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, var(--raspberry) 0%, var(--raspberry-dark) 100%);
+    color: var(--white);
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  .song-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .song-artist {
+    font-size: 12px;
+    color: var(--raspberry);
+    font-weight: 600;
+    margin-bottom: 2px;
+    line-height: 1.25;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .song-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .song-toggle {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--raspberry-bg);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s ease;
+  }
+
+  .song-toggle svg {
+    width: 16px;
+    height: 16px;
+    fill: var(--raspberry);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .song-card.open .song-toggle {
+    background: var(--raspberry);
+  }
+
+  .song-card.open .song-toggle svg {
+    fill: var(--white);
+    transform: rotate(180deg);
+  }
+
+  .song-lyrics {
+    display: none;
+  }
+
+  .song-card.open .song-lyrics {
+    display: block;
+    animation: fadeInLyrics 0.22s ease-out;
+  }
+
+  @keyframes fadeInLyrics {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .lyrics-content {
+    padding: 14px 16px 18px;
+    border-top: 1px solid var(--raspberry-light);
+    background: #FCFAF8;
+  }
+
+  .lyrics-content p {
+    font-size: var(--lyrics-font-size, 16px);
+    line-height: 1.75;
+    color: var(--text);
+    margin-bottom: 16px;
+    white-space: pre-line;
+    word-break: break-word;
+    letter-spacing: 0.1px;
+  }
+
+  .lyrics-content .chorus {
+    background: linear-gradient(135deg, rgba(194, 24, 91, 0.08) 0%, rgba(255, 213, 79, 0.18) 100%);
+    border-left: 4px solid var(--raspberry);
+    padding: 12px 14px;
+    border-radius: 0 12px 12px 0;
+    margin-bottom: 16px;
+  }
+
+  .lyrics-content .chorus p {
+    margin-bottom: 0;
+    font-weight: 550;
+    color: var(--raspberry-dark);
+  }
+
+  .lyrics-content .chorus-label {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--raspberry);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 6px;
+  }
+
+  /* No search results card */
+  .no-results {
+    display: none;
+    text-align: center;
+    padding: 36px 16px;
+    background: var(--white);
+    border-radius: 16px;
+    margin: 16px 0;
+    box-shadow: 0 2px 10px var(--shadow);
+  }
+
+  .no-results.visible {
+    display: block;
+  }
+
+  .no-results p {
+    font-size: 15px;
+    color: var(--text-light);
+    margin-bottom: 12px;
+  }
+
+  .no-results button {
+    padding: 10px 18px;
+    background: var(--raspberry);
+    color: var(--white);
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  /* Scroll to top floating button */
+  .scroll-top {
+    position: fixed;
+    bottom: calc(18px + env(safe-area-inset-bottom));
+    right: 16px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--raspberry) 0%, var(--raspberry-dark) 100%);
+    color: var(--white);
+    border: none;
+    box-shadow: 0 4px 16px rgba(194, 24, 91, 0.35);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(12px);
+    transition: all 0.25s ease;
+    z-index: 100;
+  }
+
+  .scroll-top.visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .scroll-top:active {
+    transform: scale(0.92);
+  }
+
+  .scroll-top svg {
+    width: 22px;
+    height: 22px;
+    fill: var(--white);
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 24px 16px;
+    color: var(--text-light);
+    font-size: 13px;
+  }
+
+  .footer .heart {
+    color: var(--raspberry);
+    display: inline-block;
+    animation: heartbeat 1.5s ease-in-out infinite;
+  }
+
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+  }
+
+  /* Progress indicator on very top */
+  .progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--raspberry) 0%, var(--butter) 100%);
+    z-index: 1000;
+    transition: width 0.1s ease;
+  }
+
+  /* Desktop and tablets */
+  @media (min-width: 600px) {
+    .container {
+      padding: 0 20px calc(50px + env(safe-area-inset-bottom));
+    }
+    .header {
+      padding: 22px 16px 14px;
+    }
+    .logo-container {
+      width: 155px;
+    }
+    .header h1 {
+      font-size: 28px;
+    }
+    .song-title {
+      font-size: 16px;
+    }
+    .btn {
+      font-size: 13.5px;
+      height: 40px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<div class="container">
+  <!-- Compact Header without subtitle -->
+  <header class="header">
+    <div class="logo-container">
+      <img src="logo.png" alt="Тост с малиновым вареньем и маслом" class="logo-img">
+    </div>
+    <h1>🍓 Песенный Вечер</h1>
+  </header>
+
+  <!-- Sticky Top Bar for mobile -->
+  <div class="sticky-top-bar">
+    <!-- Search -->
+    <div class="search-container">
+      <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      <input type="search" class="search-input" id="searchInput" placeholder="Поиск песни, артиста или строчки..." autocomplete="off" autocorrect="off" autocapitalize="off" enterkeyhint="search">
+      <button class="search-clear" id="searchClearBtn" onclick="clearSearch()" aria-label="Очистить поиск">✕</button>
+    </div>
+    <div class="search-status" id="searchStatus"></div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <div class="btn-group">
+        <button class="btn btn-expand" onclick="expandAll()">📖 Все</button>
+        <button class="btn btn-collapse" onclick="collapseAll()">📕 Свернуть</button>
+      </div>
+
+      <!-- Font size controls -->
+      <div class="font-controls">
+        <button class="btn-font" onclick="changeFontSize(-1)" title="Уменьшить шрифт" aria-label="Уменьшить шрифт">А-</button>
+        <span class="font-size-label" id="fontSizeLabel">16</span>
+        <button class="btn-font" onclick="changeFontSize(1)" title="Увеличить шрифт" aria-label="Увеличить шрифт">А+</button>
+      </div>
+
+      <!-- Wake Lock toggle (keep screen on) -->
+      <button class="btn-wakelock" id="btnWakeLock" onclick="toggleWakeLock()" title="Не давать экрану гаснуть">
+        <span id="wakeLockIcon">🌙</span>
+        <span id="wakeLockText">Экран</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- No search results placeholder -->
+  <div class="no-results" id="noResults">
+    <p>Песни не найдены 🔍</p>
+    <button onclick="clearSearch()">Показать все песни</button>
+  </div>
+
+  <!-- Guitar Section -->
+  <div class="section" id="guitarSection">
+    <div class="section-title">
+      <span class="icon">🎸</span>
+      <span>Гитарный блок</span>
+    </div>
+
+    <!-- Song 1 -->
+    <div class="song-card" data-search="если у вас нету тети ирония судьбы таривердиев аронов">
+      <div class="song-header" onclick="toggleSong(this)">
+        <div class="song-number">1</div>
+        <div class="song-info">
+          <div class="song-artist">Из к/ф «Ирония судьбы»</div>
+          <div class="song-title">Если у вас нету тёти</div>
+        </div>
+        <div class="song-toggle">
+          <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+        </div>
+      </div>
+      <div class="song-lyrics">
+        <div class="lyrics-content">
+          <p>Если у вас нету тёти, её вам не потерять,
+И если вы не живёте, то вам и не, то вам и не,
+То вам и не умирать,
+Не умирать.</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>Оркестр гремит басами,
+Трубач выдувает медь.
+Думайте сами, решайте сами —
+Иметь или не иметь,
+Иметь или не иметь!</p>
+          </div>
+          <p>Если у вас нету собаки, её не отравит сосед,
+И с другом не будет драки,
+Если у вас, если у вас,
+Если у вас друга нет,
+Друга нет.</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>Оркестр гремит басами,
+Трубач выдувает медь.
+Думайте сами, решайте сами —
+Иметь или не иметь,
+Иметь или не иметь!</p>
+          </div>
+          <p>Если у вас нету дома, пожары ему не страшны,
+И жена не уйдёт к другому,
+Если у вас, если у вас,
+Если у вас нет жены,
+Нету жены.</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>Оркестр гремит басами,
+Трубач выдувает медь.
+Думайте сами, решайте сами —
+Иметь или не иметь,
+Иметь или не иметь!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Song 2 -->
+    <div class="song-card" data-search="сплин мое сердце замерло остановилось">
+      <div class="song-header" onclick="toggleSong(this)">
+        <div class="song-number">2</div>
+        <div class="song-info">
+          <div class="song-artist">Сплин</div>
+          <div class="song-title">Моё сердце</div>
+        </div>
+        <div class="song-toggle">
+          <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+        </div>
+      </div>
+      <div class="song-lyrics">
+        <div class="lyrics-content">
+          <p>Мы не знали друг друга до этого лета,
+Мы болтались по свету, в земле и воде.
+И совершенно случайно мы взяли билеты
+На соседние кресла на большой высоте.</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>И моё сердце остановилось,
+Моё сердце замерло.
+И моё сердце остановилось,
+Моё сердце замерло.</p>
+          </div>
+          <p>И ровно тысячу лет мы просыпаемся вместе,
+Даже если уснули в разных местах.
+Мы идём ставить кофе под Элвиса Пресли,
+Кофе сбежал под Propellerheads, ах!</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>И моё сердце остановилось,
+Моё сердце замерло.
+И моё сердце остановилось,
+Моё сердце замерло.</p>
+          </div>
+          <p>И, может быть, ты не стала звездой в Голливуде,
+Не выходишь на подиум в нижнем белье,
+У тебя не берут автографы люди,
+И поёшь ты чуть тише, чем Монсеррат Кабалье.
+
+Ну а я, слава Богу, ни Рикки, ни Мартин,
+Не выдвигался на «Оскар», французам не забивал,
+Моим именем не назван город на карте,
+Но задёрнуты шторы и разложен диван.</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>И моё сердце остановилось,
+Моё сердце замерло.
+И моё сердце остановилось,
+Моё сердце замерло.</p>
+          </div>
+          <p>Я наяву вижу то, что многим даже не снилось,
+Не являлось под кайфом, не стучалось в стекло.
+Моё сердце остановилось,
+Отдышалось немного —
+И снова пошло.</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>И моё сердце остановилось,
+Моё сердце замерло.
+И моё сердце остановилось,
+Моё сердце замерло.
+
+И моё сердце — hasta la vista!
+Моё сердце замерло...
+Моё сердце остановилось,
+Моё сердце замерло.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Song 3 -->
+    <div class="song-card" data-search="амега лететь по белому свету грозный">
+      <div class="song-header" onclick="toggleSong(this)">
+        <div class="song-number">3</div>
+        <div class="song-info">
+          <div class="song-artist">Амега</div>
+          <div class="song-title">Лететь</div>
+        </div>
+        <div class="song-toggle">
+          <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+        </div>
+      </div>
+      <div class="song-lyrics">
+        <div class="lyrics-content">
+          <p>Однажды он сказал: «Твой полёт — всего лишь сон!»
+И ты летать не стал, стал таким, как он.
+И по земле ходить научился, как ребёнок, ты,
+Но всё не мог забыть той прозрачной высоты.</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>И лететь по белому свету,
+Став одним движением ветра,
+Лететь куда-то вдаль.
+И не думать, как приземлиться,
+А у птиц свободе учиться,
+Оставив всё то, что жаль...</p>
+          </div>
+          <p>Однажды ты привык и почти не стал мечтать,
+Но только чей-то крик вдруг позвал летать.
+И поднял ты глаза в высоту, где голоса плывут,
+Там люди в небесах, и тебя с собой зовут...</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>Полететь по белому свету,
+Стать одним движением ветра,
+Лететь куда-то вдаль.
+И не думать, как приземлиться,
+А у птиц свободе учиться,
+Оставив всё то, что жаль.
+
+И лететь по белому свету,
+Став одним движением ветра,
+Лететь куда-то вдаль.
+И не думать, как приземлиться,
+А у птиц свободе учиться,
+Оставив всё то, что жаль...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Song 4 -->
+    <div class="song-card" data-search="братья грим кустурица шагаешь босиком по улице">
+      <div class="song-header" onclick="toggleSong(this)">
+        <div class="song-number">4</div>
+        <div class="song-info">
+          <div class="song-artist">Братья Грим</div>
+          <div class="song-title">Кустурица</div>
+        </div>
+        <div class="song-toggle">
+          <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+        </div>
+      </div>
+      <div class="song-lyrics">
+        <div class="lyrics-content">
+          <p>Волею-неволей бегаем по морю,
+Голыми пятками по небу.
+Стены, семафоры, серые заборы —
+Всё это мелочи, по фигу.
+Мокрым поцелуем молнии рисуем
+И задыхаемся как в бреду.
+Грозы-хулиганы, люди-тараканы —
+Нам это по фигу, по фигу.</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>Сегодня...
+И ты после фильма Кустурицы
+Шагаешь босиком по улице.
+И если никто не простудится,
+То всё пренепременно сбудется.
+И ты, словно мокрая курица,
+Шагаешь босиком по улице.
+И если никто не простудится,
+То всё пренепременно сбудется...</p>
+          </div>
+          <p>Целую неделю капают капели
+Прямо по темени — по фигу.
+Льётся тишина, мы сошли с ума,
+Может быть.
+Мы курим сигареты только этим летом
+Без остановки и на бегу.
+Хлопаем по лужам, нам никто не нужен,
+Нам это по фигу, по фигу.</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>Сегодня...
+И ты после фильма Кустурицы
+Шагаешь босиком по улице.
+И если никто не простудится,
+То всё пренепременно сбудется.
+И ты, словно мокрая курица,
+Шагаешь босиком по улице.
+И если никто не простудится,
+То всё пренепременно сбудется.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Song 5 -->
+    <div class="song-card" data-search="бумбокс вахтерам белые обои черная посуда">
+      <div class="song-header" onclick="toggleSong(this)">
+        <div class="song-number">5</div>
+        <div class="song-info">
+          <div class="song-artist">Бумбокс</div>
+          <div class="song-title">Вахтёрам</div>
+        </div>
+        <div class="song-toggle">
+          <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+        </div>
+      </div>
+      <div class="song-lyrics">
+        <div class="lyrics-content">
+          <p>Тебе не нравится дым, чёрт с ним,
+Он убивает слова, кругом голова.
+Уже разносит молва по дворам,
+Что между нами чиуауа.
+О чём с тобой говорить, потеряли нить,
+Быть не собой перестать и дома спать.
+Нас не измерить на глаз, а сейчас
+Зачем мы давим на тормоз, не на газ?
+
+Вопрос извечный: зачем да почему?
+Я понемногу с ума, ты не сама.
+А эти ночи в Крыму теперь кому?
+Я если встречу — потом передам ему.
+Писклявый твой голосок как электрошок,
+Что я бухой без вина — твоя вина.
+Теперь узнает страна дотемна,
+Им донесут обо всём на FM-волнах.</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>Я помню: белые обои, чёрная посуда,
+Нас в хрущёвке двое, кто мы и откуда?
+Задвигаем шторы, кофеёк, плюшки стынут.
+Объясните теперь нам, вахтёры:
+Почему я на ней так сдвинут?</p>
+          </div>
+          <p>Давай вот так просидим до утра,
+Не уходи, погоди, но мне пора.
+И если выход один впереди,
+То почему мы — то холод, то жара?
+Раскладывать по местам я устал,
+И поворачивать вспять, ну вот опять.
+Прикосновения плавили мой металл,
+Ты элемент номер пять, ни дать ни взять.
+
+Идёт к финалу игра в этот раз,
+А ты всё так же молчишь, я говорю.
+Минут пятнадцать осталось до утра,
+Не вызывай такси — словлю и свалю.
+Попробуем всё подшить, не ворошить,
+Мобильные номера постирать.
+А уходить, не спросив, нету сил,
+Давай попробуем заново всё собрать.</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>Я помню: белые обои, чёрная посуда,
+Нас в хрущёвке двое, кто мы и откуда?
+Задвигаем шторы, кофеёк, плюшки стынут.
+Объясните теперь нам, вахтёры:
+Почему я на ней так сдвинут?
+
+Белые обои, чёрная посуда,
+Нас в хрущёвке двое, кто мы и откуда?
+Задвигаем шторы, кофеёк, плюшки стынут.
+Объясните теперь нам, вахтёры:
+Почему я на ней так сдвинут?</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Song 6 -->
+    <div class="song-card" data-search="браво любите девушки простых романтиков">
+      <div class="song-header" onclick="toggleSong(this)">
+        <div class="song-number">6</div>
+        <div class="song-info">
+          <div class="song-artist">Браво</div>
+          <div class="song-title">Любите, девушки</div>
+        </div>
+        <div class="song-toggle">
+          <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+        </div>
+      </div>
+      <div class="song-lyrics">
+        <div class="lyrics-content">
+          <p>В самый полный штиль и в самый сильный ураган
+Ходят в синем море корабли.
+Может, потому-то и понятно морякам,
+Что такое океан любви!</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>Этим смелым парням и беда не беда,
+Путеводная им помогает звезда!
+Любите, девушки, простых романтиков,
+Отважных лётчиков и моряков!
+Бросайте, девушки, домашних мальчиков,
+Не стоит им дарить свою любовь!</p>
+          </div>
+          <p>Начертил на синем небе «Я тебя люблю»
+Белым следом быстрый самолёт.
+Кто поздравит с днём рожденья девушку свою
+Так, как это делает пилот?</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>Этим смелым парням и беда не беда,
+Путеводная им помогает звезда!
+Любите, девушки, простых романтиков,
+Отважных лётчиков и моряков!
+Бросайте, девушки, домашних мальчиков,
+Не стоит им дарить свою любовь!
+
+Любите, девушки, простых романтиков,
+Отважных лётчиков и моряков!
+Бросайте, девушки, домашних мальчиков,
+Не стоит им дарить свою любовь!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Song 7 -->
+    <div class="song-card" data-search="чичерина тулула ветром в голову надуло замкнуло">
+      <div class="song-header" onclick="toggleSong(this)">
+        <div class="song-number">7</div>
+        <div class="song-info">
+          <div class="song-artist">Чичерина</div>
+          <div class="song-title">ТУ-ЛУ-ЛА</div>
+        </div>
+        <div class="song-toggle">
+          <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+        </div>
+      </div>
+      <div class="song-lyrics">
+        <div class="lyrics-content">
+          <p>Я стою на краю, на обрыве над рекой,
+Не могу пошевелить ни рукой, ни головой.
+Защемило в сердце мне, в голове замкнуло,
+Мне осталось только петь то, что ветром в голову надуло...</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>Ту-лу-ла, ту-лу-лу-ла, ту-ту-лу-ла,
+В голове моей замкнуло, ла-а!
+Ту-лу-ла, ту-лу-лу-ла, ту-ту-лу-ла,
+Ветром в голову надуло, ла-ла-ла!</p>
+          </div>
+          <p>Ты ушёл от меня к рыжей женщине хромой,
+Моя мама запретила возвращаться мне домой.
+Моя левая нога с края соскользнула,
+Мне осталось только петь то, что ветром в голову надуло...</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>Ту-лу-ла, ту-лу-лу-ла, ту-ту-лу-ла,
+В голове моей замкнуло, ла-а!
+Ту-лу-ла, ту-лу-лу-ла, ту-ту-лу-ла,
+Ветром в голову надуло, ла-ла-ла!
+
+Ту-лу-ла, ту-лу-лу-ла, ту-ту-лу-ла,
+В голове моей замкнуло, ла-а!
+Ту-лу-ла, ту-лу-лу-ла, ту-ту-лу-ла,
+Ветром в голову надуло, ла-ла-ла!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Song 8 -->
+    <div class="song-card" data-search="эй моряк человек амфибия песенка о морском дьяволе ты слишком долго плавал">
+      <div class="song-header" onclick="toggleSong(this)">
+        <div class="song-number">8</div>
+        <div class="song-info">
+          <div class="song-artist">Из к/ф «Человек-амфибия»</div>
+          <div class="song-title">Эй, моряк! (Песенка о морском дьяволе)</div>
+        </div>
+        <div class="song-toggle">
+          <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+        </div>
+      </div>
+      <div class="song-lyrics">
+        <div class="lyrics-content">
+          <p>Нам бы, нам бы, нам бы, нам бы всем на дно,
+Там бы, там бы, там бы, там бы пить вино.
+Там, под океаном, мы трезвы или пьяны —
+Не видно всё равно!</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>Эй, моряк, ты слишком долго плавал,
+Я тебя успела позабыть!
+Мне теперь морской по нраву дьявол,
+Его хочу любить!</p>
+          </div>
+          <p>С якоря сниматься, по местам стоять!
+Эй, на румбе, румбе, румбе, так держать!
+Дьяволу морскому свезём бочонок рому,
+Ему не устоять!</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>Эй, моряк, ты слишком долго плавал,
+Я тебя успела позабыть!
+Мне теперь морской по нраву дьявол,
+Его хочу любить!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Song 9 -->
+    <div class="song-card" data-search="киш король и шут кукла колдуна темный мрачный коридор бессонница">
+      <div class="song-header" onclick="toggleSong(this)">
+        <div class="song-number">9</div>
+        <div class="song-info">
+          <div class="song-artist">Король и Шут</div>
+          <div class="song-title">Кукла колдуна</div>
+        </div>
+        <div class="song-toggle">
+          <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+        </div>
+      </div>
+      <div class="song-lyrics">
+        <div class="lyrics-content">
+          <p>Тёмный, мрачный коридор,
+Я на цыпочках, как вор,
+Пробираюсь, чуть дыша,
+Чтобы не спугнуть
+Тех, кто спит уже давно,
+Тех, кому не всё равно,
+В чью я комнату тайком
+Желаю заглянуть,
+Чтобы увидеть...</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>Как бессонница в час ночной
+Меняет, нелюдимая, облик твой,
+Чьих невольница ты идей?
+Зачем тебе охотиться на людей?</p>
+          </div>
+          <p>Крестик на моей груди,
+На него ты погляди,
+Что в тебе способен он
+Резко изменить?
+Много книжек я читал,
+Много фокусов видал,
+Свою тайну от меня
+Не пытайся скрыть!
+Я это видел!</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>Как бессонница в час ночной
+Меняет, нелюдимая, облик твой,
+Чьих невольница ты идей?
+Зачем тебе охотиться на людей?</p>
+          </div>
+          <p>Очень жаль, что ты тогда
+Мне поверить не смогла,
+В то, что новый твой приятель
+Не такой, как все!
+Ты осталась с ним вдвоём,
+Не зная ничего о нём...
+Что для всех опасен он —
+Наплевать тебе.
+И ты попала...</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>К настоящему колдуну,
+Он загубил таких, как ты, не одну!
+Словно куклой, в час ночной
+Теперь он может управлять тобой!
+
+Всё происходит, как в страшном сне,
+И находиться здесь опасно мне!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Song 10 -->
+    <div class="song-card" data-search="сукачев гарик сукачев моя бабушка курит трубку черный пречерный табак">
+      <div class="song-header" onclick="toggleSong(this)">
+        <div class="song-number">10</div>
+        <div class="song-info">
+          <div class="song-artist">Гарик Сукачёв</div>
+          <div class="song-title">Моя бабушка курит трубку</div>
+        </div>
+        <div class="song-toggle">
+          <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+        </div>
+      </div>
+      <div class="song-lyrics">
+        <div class="lyrics-content">
+          <p>Моя бабушка курит трубку,
+Чёрный-пречёрный табак.
+Моя бабушка курит трубку
+В суровый моряцкий затяг.
+Моя бабушка курит трубку
+И обожает огненный ром.
+И когда я к бабуле заскочу на минутку,
+Мы с ней его весело пьём.</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>У неё ничего не осталось,
+У неё в кошельке три рубля.
+Моя бабушка курит трубку,
+Трубку курит бабушка моя!</p>
+          </div>
+          <p>Моя бабушка курит трубку
+И чертит планы захвата портов.
+А потом берёт в плен очередную соседку
+И продаёт её в бордель моряков.
+Та становится лучшей шлюхой,
+Та становится женщиной-вамп.
+У неё голубые корсет и подвязки,
+А на шее атласный бант.</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>У неё ни черта не осталось,
+У неё в кошельке три рубля.
+Но моя бабушка курит трубку,
+Трубку курит бабушка моя!</p>
+          </div>
+          <p>Моя бабушка курит трубку
+В комнатёнке «хрущёвки» своей.
+Моя бабушка курит трубку
+И сквозь дым видит волны морей.
+Её боятся все на свете пираты,
+И по праву гордятся ей...</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>У неё ни черта не осталось,
+У неё в кошельке три рубля.
+Но моя бабушка курит трубку,
+Трубку курит бабушка моя!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Minus Section -->
+  <div class="section" id="minusSection">
+    <div class="section-title">
+      <span class="icon">🎤</span>
+      <span>Минусовки</span>
+    </div>
+
+    <!-- Song 11 -->
+    <div class="song-card" data-search="токарев седьмой лепесток ароматы ванили hifi хайфай">
+      <div class="song-header" onclick="toggleSong(this)">
+        <div class="song-number">11</div>
+        <div class="song-info">
+          <div class="song-artist">Антон Токарев</div>
+          <div class="song-title">Седьмой лепесток</div>
+        </div>
+        <div class="song-toggle">
+          <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+        </div>
+      </div>
+      <div class="song-lyrics">
+        <div class="lyrics-content">
+          <p>Ароматы ванили,
+Сладкой ваты клубы
+Надо мной проплывают,
+Пропадая вдали.
+Заплетаются косы
+Виноградной лозы,
+Оставляя улыбку
+И немного слезы.</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>А дождь на окнах рисует,
+Напоминая о твоих поцелуях.
+Всё дело в том, что дождь ничем не рискует,
+А я боюсь, что потерял тебя.
+
+Я невозможно скучаю,
+Я очень болен, я почти умираю.
+А где-то ты и ничего не узнаешь,
+А я боюсь, что потерял тебя...</p>
+          </div>
+          <p>Ты по Малой Ордынке,
+По Крещатику я.
+На весёлых картинках
+Мы не находим себя.
+Нам осталась в награду,
+Может быть повезло,
+Горы битого счастья
+Да седьмой лепесток.</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>А дождь на окнах рисует,
+Напоминая о твоих поцелуях.
+Всё дело в том, что дождь ничем не рискует,
+А я боюсь, что потерял тебя.
+
+Я невозможно скучаю,
+Я очень болен, я почти умираю.
+А где-то ты и ничего не узнаешь,
+А я боюсь, что потерял тебя...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Song 12 -->
+    <div class="song-card" data-search="альянс баста на заре голоса зовут меня парастаев">
+      <div class="song-header" onclick="toggleSong(this)">
+        <div class="song-number">12</div>
+        <div class="song-info">
+          <div class="song-artist">Альянс / Баста</div>
+          <div class="song-title">На заре</div>
+        </div>
+        <div class="song-toggle">
+          <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+        </div>
+      </div>
+      <div class="song-lyrics">
+        <div class="lyrics-content">
+          <p>Ровный бег моей судьбы,
+Ночь, печаль и блеск души.
+Лунный свет и майский дождь
+В небесах...
+
+Долгий век моей звезды,
+Сонный блеск земной росы.
+Громкий смех и райский мёд
+В небесах...</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>На заре голоса зовут меня...
+На заре голоса зовут меня...</p>
+          </div>
+          <p>Солнца свет и сердца звук,
+Робкий взгляд и сила рук.
+Звёздный час моей мечты
+В небесах...</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>На заре голоса зовут меня...
+На заре голоса зовут меня...
+На заре голоса зовут меня...
+На заре небеса зовут меня...
+На заре!..</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Song 13 -->
+    <div class="song-card" data-search="савичева юлия если в сердце живет любовь не смотри по сторонам">
+      <div class="song-header" onclick="toggleSong(this)">
+        <div class="song-number">13</div>
+        <div class="song-info">
+          <div class="song-artist">Юлия Савичева</div>
+          <div class="song-title">Если в сердце живёт любовь</div>
+        </div>
+        <div class="song-toggle">
+          <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+        </div>
+      </div>
+      <div class="song-lyrics">
+        <div class="lyrics-content">
+          <p>Проходят дни, пролетают года,
+Высыхают океаны...
+А ты одна, в твоей душе и глазах
+Эти слёзы, эти раны.</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>Но не смотри, не смотри ты по сторонам,
+Оставайся такой, как есть, оставайся сама собой.
+Целый мир освещают твои глаза,
+Если в сердце живёт любовь!
+
+Не смотри, не смотри ты по сторонам,
+Оставайся такой, как есть, оставайся сама собой.
+Целый мир освещают твои глаза,
+Если в сердце живёт любовь!</p>
+          </div>
+          <p>Просмотрела все фильмы о любви,
+Но в жизни тоже много сказок...
+Не спеши, подожди, увидишь ты —
+Всё будет, но не сразу.</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>Но не смотри, не смотри ты по сторонам,
+Оставайся такой, как есть, оставайся сама собой.
+Целый мир освещают твои глаза,
+Если в сердце живёт любовь!
+
+Не смотри, не смотри ты по сторонам,
+Оставайся такой, как есть, оставайся сама собой.
+Целый мир освещают твои глаза,
+Если в сердце живёт любовь!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Song 14 -->
+    <div class="song-card" data-search="агутин пресняков аэропорты и города кусочки льда">
+      <div class="song-header" onclick="toggleSong(this)">
+        <div class="song-number">14</div>
+        <div class="song-info">
+          <div class="song-artist">Леонид Агутин и Владимир Пресняков</div>
+          <div class="song-title">Аэропорты</div>
+        </div>
+        <div class="song-toggle">
+          <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+        </div>
+      </div>
+      <div class="song-lyrics">
+        <div class="lyrics-content">
+          <p>Столько дней
+Он, не зная правды, просто шёл за ней,
+Убивая навсегда свою мечту.
+Но только ту,
+Кого не мог понять,
+Только ту он и не мог забыть —
+Так может быть...
+
+Столько раз
+Он пытался всё сказать ей, как сейчас,
+Никого не подпуская никогда.
+Слова — вода,
+И нельзя согреть в своей душе
+Те кусочки льда.</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>Не зная боли, не зная слёз,
+Он шёл за ней в неволе у шипов этих роз.
+Аэропорты и города
+Он проплывал, не зная,
+Собирая в сердце лишь кусочки льда,
+В сердце лишь кусочки льда...</p>
+          </div>
+          <p>Столько лет
+Он, как белый мотылёк, летел на свет,
+Чтоб обратно возвращаться в пустоту.
+Но только ту,
+Кого не мог понять,
+Только ту он и не мог забыть —
+Так может быть...</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>Не зная боли, не зная слёз,
+Он шёл за ней в неволе у шипов этих роз.
+Аэропорты и города
+Он проплывал, не зная,
+Собирая в сердце лишь кусочки льда,
+В сердце лишь кусочки льда...</p>
+          </div>
+          <p>За годами, под сводами снов людских
+Не видятся, не слышатся эти мольбы.
+Тихие слёзы: как быть?
+Тихие слёзы боли мужской...</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>Не зная боли, не зная слёз,
+Он шёл за ней в неволе у шипов этих роз.
+Аэропорты и города
+Он проплывал, не зная,
+Собирая в сердце лишь кусочки льда,
+В сердце лишь кусочки льда...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Song 15 -->
+    <div class="song-card" data-search="трофимов комната культуры поезда нас ссорили мирил вокзал">
+      <div class="song-header" onclick="toggleSong(this)">
+        <div class="song-number">15</div>
+        <div class="song-info">
+          <div class="song-artist">Женя Трофимов (Комната культуры)</div>
+          <div class="song-title">Поезда</div>
+        </div>
+        <div class="song-toggle">
+          <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+        </div>
+      </div>
+      <div class="song-lyrics">
+        <div class="lyrics-content">
+          <p>Тяни лотерейный билет,
+Чтоб тамбур прокуренным был.
+У нас с тобой выигравших нет,
+Лишь бы просто дорогу к тебе не забыл и...
+Стаканов гранёных шум
+Трещит, как любовь, по швам.
+Я каждый вокзал прошу:
+Не пускай меня к поездам.
+
+И рельсы — сердечный пульс,
+Железные струны души.
+Наверное, скоро вернусь,
+Ты, пожалуйста, только пиши мне.</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>И тянутся города,
+Я в каждом из них бывал.
+Нас ссорили поезда,
+Но мирил нас пустой вокзал.
+Чтоб быть с тобой навсегда,
+Я сразу билеты взял.
+Нас ссорили поезда,
+Но мирил нас пустой вокзал.</p>
+          </div>
+          <p>Меняется в окнах день,
+Зачёркнутый в календаре.
+Проводницам здороваться лень,
+Но сейчас они главные в нашей судьбе и...
+Пестрят заголовки газет,
+Что против судьбы не пойдёшь.
+Любви в этом городе нет,
+Но я знаю, что ты меня ждёшь.
+
+И рельсы — сердечный пульс,
+Железные струны души.
+Наверное, скоро вернусь,
+Ты, пожалуйста, только пиши мне.</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>И тянутся города,
+Я в каждом из них бывал.
+Нас ссорили поезда,
+Но мирил нас пустой вокзал.
+Чтоб быть с тобой навсегда,
+Я сразу билеты взял.
+Нас ссорили поезда,
+Но мирил нас пустой вокзал.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Song 16 -->
+    <div class="song-card" data-search="шатунов ласковый май седая ночь и только ей доверяю я">
+      <div class="song-header" onclick="toggleSong(this)">
+        <div class="song-number">16</div>
+        <div class="song-info">
+          <div class="song-artist">Юрий Шатунов</div>
+          <div class="song-title">Седая ночь</div>
+        </div>
+        <div class="song-toggle">
+          <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+        </div>
+      </div>
+      <div class="song-lyrics">
+        <div class="lyrics-content">
+          <p>Я не знаю, что сказать тебе при встрече,
+Не могу найти хотя бы пары слов.
+А недолгий вечер, а недолгий вечер
+Скоро станет ночью тёмною без снов.
+А недолгий вечер, а недолгий вечер
+Станет ночью тёмною без снов.</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>И снова седая ночь, и только ей доверяю я,
+Знаешь, седая ночь, ты все мои тайны.
+Но даже и ты помочь не можешь, и темнота твоя
+Мне одному совсем, совсем ни к чему.</p>
+          </div>
+          <p>Знаешь ты без слов, тебе давно всё ясно,
+Только прячешь взгляд своих счастливых глаз.
+И опять напрасно, и опять напрасно
+Собираюсь я всё рассказать сейчас.
+И опять напрасно, и опять напрасно
+Собираюсь всё сказать сейчас.</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>И снова седая ночь, и только ей доверяю я,
+Знаешь, седая ночь, ты все мои тайны.
+Но даже и ты помочь не можешь, и темнота твоя
+Мне одному совсем, совсем ни к чему.</p>
+          </div>
+          <p>Снова вижу я тебя который вечер,
+Снова вижу блеск твоих счастливых глаз.
+Но с тобой не вместе, но с тобой не вместе,
+Снова буду я и завтра, и сейчас.
+Но с тобой не вместе, но с тобой не вместе,
+Буду я и завтра, и сейчас.</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>И снова седая ночь, и только ей доверяю я,
+Знаешь, седая ночь, ты все мои тайны.
+Но даже и ты помочь не можешь, и темнота твоя
+Мне одному совсем, совсем ни к чему.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Song 17 -->
+    <div class="song-card" data-search="дмитриенко ваня шелк шёлк сгораю на губах бордовым цветом">
+      <div class="song-header" onclick="toggleSong(this)">
+        <div class="song-number">17</div>
+        <div class="song-info">
+          <div class="song-artist">Ваня Дмитриенко</div>
+          <div class="song-title">Шёлк (Сгораю на губах)</div>
+        </div>
+        <div class="song-toggle">
+          <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+        </div>
+      </div>
+      <div class="song-lyrics">
+        <div class="lyrics-content">
+          <p>Я завяжу тебе глаза, и ты не будешь знать, где мы.
+Я запрещу тебе молчать, я разобью твои стены.
+Я не дам тебе уйти, ведь я только тебя нашёл.
+Кто-то верил, что ты с ним, но медленно отошёл.
+И для тела моего ты самый заветный шёлк.
+Где не нужно, погостил — наконец-то к тебе пришёл.</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>Сгораю на губах твоих бордовым цветом,
+И ломай меня, как ломят сигареты.
+Сколько ни беги — всё повторится вновь,
+Там, где умирает ненависть, рождается любовь!
+
+Ла-ла-ла-ла, ла-ла-ла-ла, ла-ла-ла-ла,
+Там, где умирает ненависть, рождается любовь!</p>
+          </div>
+          <p>Так осторожно царапают душу нежные слова.
+Небо играет на нас, зная, что хотят твои глаза.
+Сбитые стрелки на часах, целую чувства на устах.
+Хочешь молчать? Тогда молчи на моих руках.</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>Сгораю на губах твоих бордовым цветом,
+И ломай меня, как ломят сигареты.
+Сколько ни беги — всё повторится вновь,
+Там, где умирает ненависть, рождается любовь!
+
+Сгораю на губах твоих бордовым цветом,
+И ломай меня, как ломят сигареты.
+Сколько ни беги, всё повторится вновь,
+Там, где умирает ненависть, рождается любовь!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Song 18 -->
+    <div class="song-card" data-search="леприконсы ляпис трубецкой хали гали паратрупер супер 8">
+      <div class="song-header" onclick="toggleSong(this)">
+        <div class="song-number">18</div>
+        <div class="song-info">
+          <div class="song-artist">Леприконсы</div>
+          <div class="song-title">Хали-Гали, Паратрупер</div>
+        </div>
+        <div class="song-toggle">
+          <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+        </div>
+      </div>
+      <div class="song-lyrics">
+        <div class="lyrics-content">
+          <p>Помню, было мне десять лет,
+И я копил на новый велосипед.
+Я жил лишь этою мечтой,
+Пока как-то раз не встретился с тобой.
+Ты меня обворожила,
+Погулять с собою предложила.
+Я бы взял копилку и разбил,
+И тебя в парк отдыха сводил.</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>«Хали-гали», а «Паратрупер» —
+Нам с тобою было супер!
+«Супер-8», а «Хали-гали» —
+Мы с тобой весь день летали!
+«Хали-гали», а «Паратрупер» —
+Нам с тобою было супер!
+«Супер-8», а «Хали-гали» —
+Мы с тобой весь день летали!</p>
+          </div>
+          <p>А когда мне было пятнадцать лет,
+И я копил на новенький мопед.
+Я жил лишь этою мечтой,
+Пока как-то раз не встретился с тобой.
+Ты меня обворожила,
+На дискач попсовый пригласила.
+Напитков много разных было,
+Ты меня в ту ночь уговорила.</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>«Хали-гали», а «Паратрупер» —
+Нам с тобою было супер!
+«Супер-8», а «Хали-гали» —
+Мы с тобой всю ночь летали!
+«Хали-гали», а «Паратрупер» —
+Нам с тобою было супер!
+«Супер-8», а «Хали-гали» —
+Мы с тобой всю ночь летали!</p>
+          </div>
+          <p>Но ты сказала мне: «Извини и прощай!»
+Сколько буду жить я,
+Помнить буду это, а так и знай!</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>«Хали-гали», а «Паратрупер» —
+Нам с тобою было супер!
+«Супер-8», а «Хали-гали» —
+Мы с тобой весь день летали!
+«Хали-гали», а «Паратрупер» —
+Нам с тобою было супер!
+«Супер-8», а «Хали-гали» —
+Мы с тобой весь день летали!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Song 19 -->
+    <div class="song-card" data-search="губин андрей ночь что за странная свобода">
+      <div class="song-header" onclick="toggleSong(this)">
+        <div class="song-number">19</div>
+        <div class="song-info">
+          <div class="song-artist">Андрей Губин</div>
+          <div class="song-title">Ночь</div>
+        </div>
+        <div class="song-toggle">
+          <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+        </div>
+      </div>
+      <div class="song-lyrics">
+        <div class="lyrics-content">
+          <p>Ночь, что за странная свобода —
+От заката до восхода
+Ждать тебя, надеясь вновь, о-о-о.
+День, я прошу тебя, не надо
+От восхода до заката
+Говорить мне про любовь, о-о-о.
+
+Нет, я не буду говорить,
+Что я всё готов простить
+И обид не помню я.
+Но ты же знаешь всё равно,
+Что в душе моей темно,
+Если рядом нет тебя.</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>Ночь — ожиданья холод,
+Боль — словно я расколот...
+Я ничего не вижу,
+Сам себя я ненавижу.
+Вновь слёзы ниоткуда,
+В кровь я кусаю губы —
+Всё, что мне сегодня надо:
+Просто быть с тобою рядом.</p>
+          </div>
+          <p>Ночь, что за странная свобода —
+От заката до восхода
+Ждать тебя, надеясь вновь, о-о-о.
+День, я прошу тебя, не надо
+От восхода до заката
+Говорить мне про любовь, о-о-о.
+
+Нет, я не буду говорить,
+Что хочу тебя забыть
+И не вспомнить никогда.
+Но ты должна меня понять:
+Просто я устану ждать,
+И, быть может, навсегда.
+
+Пусть ты меня не слышишь,
+Пусть голос твой всё тише,
+Я буду верить в чудо,
+Просто так, из ниоткуда.
+Нет, не хочу я много,
+Всё, что прошу у Бога —
+Мне так мало в жизни надо:
+Просто быть сегодня рядом.</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>Ночь — ожиданья холод,
+Боль — словно я расколот...
+Я ничего не вижу,
+Сам себя я ненавижу.
+Вновь слёзы ниоткуда,
+В кровь я кусаю губы —
+Всё, что мне сегодня надо:
+Просто быть с тобою рядом.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Song 20 -->
+    <div class="song-card" data-search="луч солнца золотого бременские музыканты трубадур ночь пройдет на бис магомаев">
+      <div class="song-header" onclick="toggleSong(this)">
+        <div class="song-number">20</div>
+        <div class="song-info">
+          <div class="song-artist">Из м/ф «Бременские музыканты»</div>
+          <div class="song-title">Луч солнца золотого (на бис)</div>
+        </div>
+        <div class="song-toggle">
+          <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+        </div>
+      </div>
+      <div class="song-lyrics">
+        <div class="lyrics-content">
+          <p>Луч солнца золотого
+Тьмы скрыла пелена.
+И между нами снова
+Вдруг выросла стена.
+Ла-ла-ла, е-е-е-е-е...</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>Ночь пройдёт, настанет утро ясное,
+Верю, счастье нас с тобой ждёт.
+Ночь пройдёт, пройдёт пора ненастная,
+Солнце взойдёт, солнце взойдёт!</p>
+          </div>
+          <p>Петь птицы перестали,
+Свет звёзд коснулся крыш.
+В час грусти и печали
+Ты голос мой услышь.
+Ла-ла-ла, е-е-е-е-е...</p>
+          <div class="chorus">
+            <div class="chorus-label">Припев</div>
+            <p>Ночь пройдёт, настанет утро ясное,
+Верю, счастье нас с тобой ждёт.
+Ночь пройдёт, пройдёт пора ненастная,
+Солнце взойдёт, солнце взойдёт!
+
+Солнце взойдёт...
+Солнце взойдёт!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>Сделано с <span class="heart">❤</span> для нашего праздника</p>
+    <p style="margin-top: 6px; opacity: 0.7;">🍓 Песенный Вечер 2026</p>
+  </footer>
+</div>
+
+<!-- Scroll to top floating button -->
+<button class="scroll-top" id="scrollTopBtn" onclick="scrollToTop()" aria-label="Наверх">
+  <svg viewBox="0 0 24 24"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>
+</button>
+
+<script>
+  // Toggle song card with smooth scroll offset for sticky bar
+  function toggleSong(header) {
+    const card = header.parentElement;
+    const isOpening = !card.classList.contains('open');
+    card.classList.toggle('open');
+    
+    if (isOpening) {
+      setTimeout(() => {
+        const topBar = document.querySelector('.sticky-top-bar');
+        const topOffset = (topBar ? topBar.offsetHeight : 60) + 8;
+        const rect = card.getBoundingClientRect();
+        if (rect.top < topOffset || rect.top > window.innerHeight - 150) {
+          const targetY = window.pageYOffset + rect.top - topOffset;
+          window.scrollTo({ top: targetY, behavior: 'smooth' });
+        }
+      }, 50);
+    }
+  }
+
+  // Expand all songs
+  function expandAll() {
+    document.querySelectorAll('.song-card').forEach(card => {
+      card.classList.add('open');
+    });
+  }
+
+  // Collapse all songs
+  function collapseAll() {
+    document.querySelectorAll('.song-card').forEach(card => {
+      card.classList.remove('open');
+    });
+  }
+
+  // Font size adjustment (14px to 22px)
+  const fontSizes = [14, 16, 18, 20, 22];
+  let currentFontIdx = 1; // default 16px
+
+  try {
+    const saved = localStorage.getItem('songbook_fontsize');
+    if (saved) {
+      const idx = fontSizes.indexOf(parseInt(saved, 10));
+      if (idx !== -1) currentFontIdx = idx;
+    }
+  } catch (e) {}
+
+  function applyFontSize() {
+    const size = fontSizes[currentFontIdx];
+    document.documentElement.style.setProperty('--lyrics-font-size', size + 'px');
+    document.getElementById('fontSizeLabel').textContent = size;
+    try {
+      localStorage.setItem('songbook_fontsize', size);
+    } catch (e) {}
+  }
+  applyFontSize();
+
+  function changeFontSize(direction) {
+    currentFontIdx = Math.max(0, Math.min(fontSizes.length - 1, currentFontIdx + direction));
+    applyFontSize();
+  }
+
+  // Search logic with instant clear and live counter
+  const searchInput = document.getElementById('searchInput');
+  const searchClearBtn = document.getElementById('searchClearBtn');
+  const searchStatus = document.getElementById('searchStatus');
+  const noResults = document.getElementById('noResults');
+
+  function handleSearch() {
+    const query = searchInput.value.toLowerCase().trim();
+    searchClearBtn.classList.toggle('visible', query.length > 0);
+    
+    let totalCount = 0;
+    let matchCount = 0;
+
+    document.querySelectorAll('.song-card').forEach(card => {
+      totalCount++;
+      const searchData = (card.getAttribute('data-search') || '').toLowerCase();
+      const title = card.querySelector('.song-title').textContent.toLowerCase();
+      const artist = card.querySelector('.song-artist').textContent.toLowerCase();
+      const lyrics = card.querySelector('.lyrics-content') ? card.querySelector('.lyrics-content').textContent.toLowerCase() : '';
+      
+      const isMatch = (query === '' || searchData.includes(query) || title.includes(query) || artist.includes(query) || lyrics.includes(query));
+      
+      if (isMatch) {
+        card.classList.remove('hidden');
+        matchCount++;
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+
+    // Check sections: hide section title if 0 songs matched in that section
+    document.querySelectorAll('.section').forEach(sec => {
+      const visibleSongs = sec.querySelectorAll('.song-card:not(.hidden)');
+      sec.style.display = (visibleSongs.length === 0 && query !== '') ? 'none' : 'block';
+    });
+
+    if (query !== '') {
+      searchStatus.textContent = `Найдено песен: ${matchCount} из ${totalCount}`;
+      searchStatus.classList.add('visible');
+      noResults.classList.toggle('visible', matchCount === 0);
+    } else {
+      searchStatus.classList.remove('visible');
+      noResults.classList.remove('visible');
+    }
+  }
+
+  searchInput.addEventListener('input', handleSearch);
+
+  function clearSearch() {
+    searchInput.value = '';
+    handleSearch();
+    searchInput.focus();
+  }
+
+  // Dismiss mobile keyboard on scroll
+  window.addEventListener('scroll', () => {
+    if (document.activeElement === searchInput && window.scrollY > 150) {
+      searchInput.blur();
+    }
+  }, { passive: true });
+
+  // Scroll to top & Progress bar
+  const scrollTopBtn = document.getElementById('scrollTopBtn');
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    if (scrollY > 350) {
+      scrollTopBtn.classList.add('visible');
+    } else {
+      scrollTopBtn.classList.remove('visible');
+    }
+
+    const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const progress = docHeight > 0 ? (scrollY / docHeight) * 100 : 0;
+    document.getElementById('progressBar').style.width = progress + '%';
+  }, { passive: true });
+
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Screen Wake Lock API (keeps screen awake while singing)
+  let wakeLock = null;
+  const btnWakeLock = document.getElementById('btnWakeLock');
+  const wakeLockIcon = document.getElementById('wakeLockIcon');
+  const wakeLockText = document.getElementById('wakeLockText');
+
+  async function requestWakeLock() {
+    if ('wakeLock' in navigator) {
+      try {
+        wakeLock = await navigator.wakeLock.request('screen');
+        btnWakeLock.classList.add('active');
+        wakeLockIcon.textContent = '☀️';
+        wakeLockText.textContent = 'Экран ВКЛ';
+        wakeLock.addEventListener('release', () => {
+          wakeLock = null;
+          btnWakeLock.classList.remove('active');
+          wakeLockIcon.textContent = '🌙';
+          wakeLockText.textContent = 'Экран';
+        });
+      } catch (err) {
+        console.log('Wake Lock request error:', err);
+      }
+    } else {
+      alert('Ваш браузер не поддерживает удержание экрана активным.');
+    }
+  }
+
+  function releaseWakeLock() {
+    if (wakeLock) {
+      wakeLock.release();
+      wakeLock = null;
+      btnWakeLock.classList.remove('active');
+      wakeLockIcon.textContent = '🌙';
+      wakeLockText.textContent = 'Экран';
+    }
+  }
+
+  function toggleWakeLock() {
+    if (wakeLock) {
+      releaseWakeLock();
+    } else {
+      requestWakeLock();
+    }
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (wakeLock !== null && document.visibilityState === 'visible') {
+      requestWakeLock();
+    }
+  });
+</script>
+
+</body>
+</html>
